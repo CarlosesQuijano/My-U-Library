@@ -1,4 +1,4 @@
-import { Schema, model, Document } from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 
 interface IBook extends Document {
     title: string;
@@ -8,14 +8,12 @@ interface IBook extends Document {
     stock: number;
 }
 
-const bookSchema = new Schema<IBook>({
+const BookSchema: Schema = new Schema({
     title: { type: String, required: true },
     author: { type: String, required: true },
     publishedYear: { type: Number, required: true },
     genre: { type: String, required: true },
-    stock: { type: Number, required: true, default: 1 }
+    stock: { type: Number, required: true }
 });
 
-const Book = model<IBook>('Book', bookSchema);
-
-export default Book;
+export default mongoose.model<IBook>('Book', BookSchema);
