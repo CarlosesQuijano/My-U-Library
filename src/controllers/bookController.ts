@@ -39,15 +39,24 @@ export const addBook = async (req: Request, res: Response) => {
 
 export const updateBookStock = async (req: Request, res: Response) => {
     try {
-        const book = await Book.findById(req.params.id);
-        if (book) {
-            book.stock += req.body.stockChange;
-            await book.save();
-            res.json(book);
-        } else {
-            res.status(404).send('Libro no encontrado');
+        const { id } = req.params;
+        const { stock } = req.body;
+
+        const stockNumber = Number(stock);
+        if (isNaN(stockNumber)) {
+            return res.status(400).json({ message: 'El campo stock debe ser un número válido' });
         }
-    } catch (err) {
-        res.status(500).send(err);
+
+        const book = await Book.findById(id);
+        if (!book) {
+            return res.status(404).json({ message: 'Libro no encontrado' });
+        }
+
+        book.stock = stockNumber;
+        await book.save();
+
+        res.status(200).json(book);
+    } catch (error) {
+        res.status(500).json({ message: 'Error al actualizar el stock del libro', error });
     }
 };
