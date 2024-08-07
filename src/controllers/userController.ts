@@ -40,7 +40,6 @@ export const checkoutBook = async (req: Request, res: Response) => {
             return res.status(400).json({ message: 'No hay stock disponible para este libro' });
         }
 
-        // Actualiza el stock del libro y los libros solicitados por el usuario
         book.stock -= 1;
         user.checkedOutBooks.push(book._id as mongoose.Types.ObjectId);
 
@@ -63,10 +62,8 @@ export const returnBook = async (req: Request, res: Response) => {
             return res.status(404).json({ message: 'Usuario o libro no encontrado' });
         }
 
-        // Asegúrate de que book._id es tratado como ObjectId
         const bookIdObject = book._id as mongoose.Types.ObjectId;
 
-        // Actualiza el stock del libro y los libros solicitados por el usuario
         book.stock += 1;
         user.checkedOutBooks = user.checkedOutBooks.filter(
             (id) => id.toString() !== bookIdObject.toString()
